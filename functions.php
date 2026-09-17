@@ -95,6 +95,11 @@ function get_post_thumbnail($attr = null)
     }
 
     if (! $attach_id) {
+        $filtered = apply_filters('get_post_thumbnail', '', $post_id, $_attr);
+        if (is_string($filtered) && $filtered !== '') {
+            return $filtered;
+        }
+
         if (! $_attr['show_placeholder']) {
             return null;
         }
@@ -109,7 +114,7 @@ function get_post_thumbnail($attr = null)
             $placeholder = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
         }
 
-        return sprintf(
+        $html = sprintf(
             '<img src="%s" width="%d" height="%d" class="%s" alt="" role="presentation" %s />',
             esc_url($placeholder),
             (int) $_attr['width'],
@@ -117,6 +122,8 @@ function get_post_thumbnail($attr = null)
             esc_attr($_attr['class']),
             $_attr['attr']
         );
+
+        return apply_filters('get_post_thumbnail', $html, $post_id, $_attr);
     }
 
     $args = Settings::mergeDefaults([
@@ -128,5 +135,5 @@ function get_post_thumbnail($attr = null)
         'alt'    => get_the_title($post_id),
     ]);
 
-    return thumb_img($args, $attach_id);
+    return apply_filters('get_post_thumbnail', thumb_img($args, $attach_id), $post_id, $_attr);
 }
