@@ -4,6 +4,9 @@
  * Legacy functions for backward compatibility
  * These functions wrap the new API to maintain compatibility with old code
  */
+
+use KamaThumb\Infrastructure\WordPress\Settings;
+
 add_filter('jpeg_quality', function () {
     return 100;
 });
@@ -92,31 +95,38 @@ function get_post_thumbnail($attr = null)
     }
 
     if (! $attach_id) {
-        if ($_attr['show_placeholder']) {
-            $options = get_option('kama_thumbnail', []);
-            $placeholder = $options['no_photo_url'] ?? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
-
-            return sprintf(
-                '<img src="%s" width="%d" height="%d" class="%s" alt="No image" %s />',
-                esc_url($placeholder),
-                (int) $_attr['width'],
-                (int) $_attr['height'],
-                esc_attr($_attr['class']),
-                $_attr['attr']
-            );
+        if (! $_attr['show_placeholder']) {
+            return null;
         }
 
-        return null;
+        $options = Settings::get();
+        if (! empty($options['no_stub'])) {
+            return null;
+        }
+
+        $placeholder = Settings::resolveNoPhotoUrl((string) ($options['no_photo_url'] ?? ''));
+        if ($placeholder === '') {
+            $placeholder = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+        }
+
+        return sprintf(
+            '<img src="%s" width="%d" height="%d" class="%s" alt="" role="presentation" %s />',
+            esc_url($placeholder),
+            (int) $_attr['width'],
+            (int) $_attr['height'],
+            esc_attr($_attr['class']),
+            $_attr['attr']
+        );
     }
 
-    $args = [
+    $args = Settings::mergeDefaults([
         'width'  => $_attr['width'],
         'height' => $_attr['height'],
         'crop'   => $_attr['crop'],
         'class'  => $_attr['class'],
         'attr'   => $_attr['attr'],
         'alt'    => get_the_title($post_id),
-    ];
+    ]);
 
     return thumb_img($args, $attach_id);
 }

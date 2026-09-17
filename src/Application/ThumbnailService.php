@@ -5,6 +5,7 @@ namespace KamaThumb\Application;
 use KamaThumb\Domain\Services\ThumbnailGenerator;
 use KamaThumb\Domain\ValueObjects\ImageSource;
 use KamaThumb\Domain\ValueObjects\ThumbnailProfile;
+use KamaThumb\Infrastructure\WordPress\Settings;
 
 final class ThumbnailService
 {
@@ -30,7 +31,7 @@ final class ThumbnailService
             return null;
         }
 
-        $profile = ThumbnailProfile::fromArray($args);
+        $profile = ThumbnailProfile::fromArray(Settings::mergeDefaults($args));
 
         return $this->generator->generate($imageSource, $profile);
     }

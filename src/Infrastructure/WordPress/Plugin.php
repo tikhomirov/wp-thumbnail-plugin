@@ -28,6 +28,8 @@ final class Plugin
     {
         if (is_admin()) {
             add_action('admin_menu', [$this, 'registerAdminMenu']);
+            add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
+            add_action('admin_post_kama_thumb_save_settings', [$this, 'handleSaveSettings']);
             add_action('admin_post_kama_thumb_clear_cache', [$this, 'handleClearCache']);
         }
 
@@ -54,8 +56,44 @@ final class Plugin
 
         $processor = $this->container->getImageProcessor();
         $storage = $this->container->getStorage();
+        $options = Settings::get();
+        $noPhotoPreview = Settings::resolveNoPhotoUrl((string) ($options['no_photo_url'] ?? ''));
+        $settings_saved = isset($_GET['settings_saved']);
 
         include __DIR__.'/../../../views/admin/settings.php';
+    }
+
+    public function enqueueAdminAssets(string $hook): void
+    {
+        if ($hook !== 'settings_page_kama-thumbnail-settings') {
+            return;
+        }
+
+        wp_enqueue_media();
+        wp_enqueue_script(
+            'kama-thumb-settings',
+            plugins_url('assets/js/admin-settings.js', KT_MAIN_FILE),
+            ['jquery'],
+            filemtime(KT_PATH.'assets/js/admin-settings.js'),
+            true
+        );
+    }
+
+    public function handleSaveSettings(): void
+    {
+        if (! current_user_can('manage_options')) {
+            wp_die(__('You do not have permission to perform this action.', 'thumbnail'));
+        }
+
+        check_admin_referer('kama_thumb_save_settings');
+
+        Settings::save(wp_unslash($_POST));
+
+        wp_redirect(add_query_arg([
+            'page'           => 'kama-thumbnail-settings',
+            'settings_saved' => 1,
+        ], admin_url('options-general.php')));
+        exit;
     }
 
     public function handleClearCache(): void
