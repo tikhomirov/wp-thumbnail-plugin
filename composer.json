@@ -2,7 +2,7 @@
   "name": "rwsite/wp-thumbnail-plugin",
   "description": "Creates post thumbnails on fly and cache it.",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "GPL-2.0-or-later",
   "type": "wordpress-plugin",
   "authors": [
     {

@@ -4,7 +4,7 @@
  * Plugin Name:     Thumbnails
  * Plugin URL:      https://rwsite.ru
  * Description:     Modern thumbnail generation plugin with WebP support, PSR-4 architecture, and comprehensive API. Automatically generates and caches thumbnails from featured images, post content, or attachments. Supports both legacy (<code>kama_thumb_*</code>) and modern (<code>thumb_*</code>) API functions with flexible configuration.
- * Version:         1.0.2
+ * Version:         1.0.3
  * Text Domain:     thumbnail
  * Domain Path:     /languages
  * Author:          Aleksey Tikhomirov <alex@rwsite.ru>
