@@ -10,7 +10,7 @@ use KamaThumb\Infrastructure\WordPress\Settings;
 final class ThumbnailService
 {
     public function __construct(
-        protected ThumbnailGenerator $generator
+        protected ThumbnailGenerator $generator,
     ) {}
 
     /**
@@ -37,7 +37,7 @@ final class ThumbnailService
     }
 
     /**
-     * @param  array{post_id?: int, attach_id?: int}  $args
+     * @param array{post_id?: int, attach_id?: int} $args
      */
     protected function resolveImageSource(string|int $source, array $args): ?ImageSource
     {

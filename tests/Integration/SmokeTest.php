@@ -26,7 +26,7 @@ it('documentation exists', function () {
 it('composer json is valid', function () {
     $composerJson = file_get_contents(__DIR__ . '/../../composer.json');
     $decoded = json_decode($composerJson, true);
-    
+
     expect($decoded)->not->toBeNull();
     expect($decoded['name'])->toBe('rwsite/wp-thumbnail-plugin');
     expect($decoded['require-dev'])->toHaveKey('pestphp/pest');

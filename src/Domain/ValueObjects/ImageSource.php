@@ -7,7 +7,7 @@ final class ImageSource
     public function __construct(
         protected string $url,
         protected ?string $path = null,
-        protected ?int $attachmentId = null
+        protected ?int $attachmentId = null,
     ) {}
 
     public function getUrl(): string

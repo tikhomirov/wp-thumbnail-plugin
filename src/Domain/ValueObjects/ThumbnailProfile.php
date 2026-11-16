@@ -9,7 +9,7 @@ final class ThumbnailProfile
         protected int $height,
         protected bool|array $crop = true,
         protected int $quality = 90,
-        protected ?string $format = null
+        protected ?string $format = null,
     ) {}
 
     public function getWidth(): int
@@ -52,7 +52,7 @@ final class ThumbnailProfile
     }
 
     /**
-     * @param  array{width?: int, height?: int, crop?: bool|array, quality?: int, format?: string|null}  $data
+     * @param array{width?: int, height?: int, crop?: bool|array, quality?: int, format?: string|null} $data
      */
     public static function fromArray(array $data): self
     {
@@ -61,7 +61,7 @@ final class ThumbnailProfile
             $data['height'] ?? 0,
             $data['crop'] ?? true,
             $data['quality'] ?? 90,
-            $data['format'] ?? null
+            $data['format'] ?? null,
         );
     }
 }

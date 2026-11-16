@@ -67,7 +67,7 @@ final class ImagickProcessor implements ImageProcessorInterface
         int $originalHeight,
         int $targetWidth,
         int $targetHeight,
-        bool|array $crop
+        bool|array $crop,
     ): void {
         $sourceRatio = $originalWidth / $originalHeight;
         $targetRatio = $targetWidth / $targetHeight;

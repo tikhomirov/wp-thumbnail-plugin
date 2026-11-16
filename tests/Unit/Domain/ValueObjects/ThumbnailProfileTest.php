@@ -18,7 +18,7 @@ it('creates thumbnail profile with custom values', function () {
         height: 300,
         crop: false,
         quality: 85,
-        format: 'webp'
+        format: 'webp',
     );
 
     expect($profile->getWidth())->toBe(400)
@@ -44,11 +44,11 @@ it('converts profile to array', function () {
 
 it('creates profile from array', function () {
     $data = [
-        'width' => 500,
-        'height' => 400,
-        'crop' => false,
+        'width'   => 500,
+        'height'  => 400,
+        'crop'    => false,
         'quality' => 80,
-        'format' => 'png',
+        'format'  => 'png',
     ];
 
     $profile = ThumbnailProfile::fromArray($data);

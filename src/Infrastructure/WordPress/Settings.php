@@ -38,7 +38,7 @@ final class Settings
     }
 
     /**
-     * @param  array<string, mixed>  $input
+     * @param array<string, mixed> $input
      */
     public static function save(array $input): void
     {
@@ -48,7 +48,7 @@ final class Settings
         if (is_numeric($noPhoto)) {
             $noPhoto = (string) (int) $noPhoto;
         } else {
-            $noPhoto = esc_url_raw(trim((string) $noPhoto));
+            $noPhoto = esc_url_raw(mb_trim((string) $noPhoto));
         }
 
         $options = [
@@ -85,7 +85,7 @@ final class Settings
     }
 
     /**
-     * @param  array<string, mixed>  $args
+     * @param  array<string, mixed> $args
      * @return array<string, mixed>
      */
     public static function mergeDefaults(array $args): array

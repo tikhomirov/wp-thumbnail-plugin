@@ -4,7 +4,7 @@ if (! defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
 
-require_once __DIR__.'/autoload.php';
+require_once __DIR__ . '/autoload.php';
 
 use KamaThumb\Infrastructure\WordPress\ServiceContainer;
 

@@ -14,8 +14,8 @@ add_filter('jpeg_quality', function () {
 /**
  * Returns thumbnail URL only (legacy wrapper)
  *
- * @param  array  $args
- * @param  string|int  $src
+ * @param  array      $args
+ * @param  string|int $src
  * @return string
  */
 function kama_thumb_src($args = [], $src = 'notset')
@@ -26,8 +26,8 @@ function kama_thumb_src($args = [], $src = 'notset')
 /**
  * Returns thumbnail img tag (legacy wrapper)
  *
- * @param  array  $args
- * @param  string|int  $src
+ * @param  array      $args
+ * @param  string|int $src
  * @return string
  */
 function kama_thumb_img($args = [], $src = 'notset')
@@ -38,8 +38,8 @@ function kama_thumb_img($args = [], $src = 'notset')
 /**
  * Returns thumbnail with link to original (legacy wrapper)
  *
- * @param  array  $args
- * @param  string|int  $src
+ * @param  array      $args
+ * @param  string|int $src
  * @return string
  */
 function kama_thumb_a_img($args = [], $src = 'notset')
@@ -50,7 +50,7 @@ function kama_thumb_a_img($args = [], $src = 'notset')
 /**
  * Access to last instance properties (legacy compatibility)
  *
- * @param  string  $optname
+ * @param  string     $optname
  * @return mixed|null
  */
 function kama_thumb($optname = '')
@@ -120,7 +120,7 @@ function get_post_thumbnail($attr = null)
             (int) $_attr['width'],
             (int) $_attr['height'],
             esc_attr($_attr['class']),
-            $_attr['attr']
+            $_attr['attr'],
         );
 
         return apply_filters('get_post_thumbnail', $html, $post_id, $_attr);

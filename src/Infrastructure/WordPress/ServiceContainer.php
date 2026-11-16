@@ -49,11 +49,11 @@ final class ServiceContainer
     {
         if ($this->storage === null) {
             $basePath = defined('WP_CONTENT_DIR')
-                ? WP_CONTENT_DIR.'/cache/thumb'
+                ? WP_CONTENT_DIR . '/cache/thumb'
                 : '';
 
             $baseUrl = function_exists('content_url')
-                ? content_url().'/cache/thumb'
+                ? content_url() . '/cache/thumb'
                 : '';
 
             $this->storage = new FileSystemStorage($basePath, $baseUrl);
@@ -67,7 +67,7 @@ final class ServiceContainer
         if ($this->generator === null) {
             $this->generator = new ThumbnailGenerator(
                 $this->getImageProcessor(),
-                $this->getStorage()
+                $this->getStorage(),
             );
         }
 
@@ -78,7 +78,7 @@ final class ServiceContainer
     {
         if ($this->thumbnailService === null) {
             $this->thumbnailService = new ThumbnailService(
-                $this->getThumbnailGenerator()
+                $this->getThumbnailGenerator(),
             );
         }
 

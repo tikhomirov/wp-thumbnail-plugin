@@ -3,7 +3,7 @@
 use KamaThumb\Infrastructure\Storage\FileSystemStorage;
 
 beforeEach(function () {
-    $this->basePath = sys_get_temp_dir().'/kama-thumb-test-'.uniqid();
+    $this->basePath = sys_get_temp_dir() . '/kama-thumb-test-' . uniqid();
     $this->baseUrl = 'https://example.com/cache';
     $this->storage = new FileSystemStorage($this->basePath, $this->baseUrl);
 });
@@ -50,12 +50,12 @@ it('returns empty string for nonexistent file', function () {
 
 it('generates correct url', function () {
     $url = $this->storage->url('subdir/test.jpg');
-    expect($url)->toBe($this->baseUrl.'/subdir/test.jpg');
+    expect($url)->toBe($this->baseUrl . '/subdir/test.jpg');
 });
 
 it('generates correct path', function () {
     $path = $this->storage->path('subdir/test.jpg');
-    expect($path)->toBe($this->basePath.'/subdir/test.jpg');
+    expect($path)->toBe($this->basePath . '/subdir/test.jpg');
 });
 
 it('clears cache and returns count', function () {

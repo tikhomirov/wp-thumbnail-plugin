@@ -89,7 +89,7 @@ final class GdProcessor implements ImageProcessorInterface
         int $originalWidth,
         int $originalHeight,
         int $targetWidth,
-        int $targetHeight
+        int $targetHeight,
     ): \GdImage|false {
         $ratio = min($targetWidth / $originalWidth, $targetHeight / $originalHeight);
         $newWidth = (int) ($originalWidth * $ratio);
@@ -113,7 +113,7 @@ final class GdProcessor implements ImageProcessorInterface
         int $originalHeight,
         int $targetWidth,
         int $targetHeight,
-        bool|array $crop
+        bool|array $crop,
     ): \GdImage|false {
         $sourceRatio = $originalWidth / $originalHeight;
         $targetRatio = $targetWidth / $targetHeight;
@@ -155,14 +155,14 @@ final class GdProcessor implements ImageProcessorInterface
 
     protected function saveImage(\GdImage $image, string $path, ?string $format, int $quality): bool
     {
-        $extension = $format ?? strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $extension = $format ?? mb_strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
         return match ($extension) {
             'jpg', 'jpeg' => imagejpeg($image, $path, $quality),
-            'png'   => imagepng($image, $path, (int) (9 - ($quality / 10))),
-            'gif'   => imagegif($image, $path),
-            'webp'  => function_exists('imagewebp') ? imagewebp($image, $path, $quality) : false,
-            default => false,
+            'png'         => imagepng($image, $path, (int) (9 - ($quality / 10))),
+            'gif'         => imagegif($image, $path),
+            'webp'        => function_exists('imagewebp') ? imagewebp($image, $path, $quality) : false,
+            default       => false,
         };
     }
 }

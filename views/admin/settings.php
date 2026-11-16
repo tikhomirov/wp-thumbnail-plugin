@@ -1,10 +1,10 @@
 <?php
 /**
- * @var \KamaThumb\Domain\Contracts\ImageProcessorInterface $processor
- * @var \KamaThumb\Domain\Contracts\StorageInterface $storage
- * @var array<string, mixed> $options
- * @var string $noPhotoPreview
- * @var bool $settings_saved
+ * @var KamaThumb\Domain\Contracts\ImageProcessorInterface $processor
+ * @var KamaThumb\Domain\Contracts\StorageInterface        $storage
+ * @var array<string, mixed>                               $options
+ * @var string                                             $noPhotoPreview
+ * @var bool                                               $settings_saved
  */
 defined('ABSPATH') || exit;
 

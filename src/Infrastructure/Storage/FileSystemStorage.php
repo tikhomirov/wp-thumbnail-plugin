@@ -8,10 +8,10 @@ final class FileSystemStorage implements StorageInterface
 {
     public function __construct(
         protected string $basePath,
-        protected string $baseUrl
+        protected string $baseUrl,
     ) {
-        $this->basePath = rtrim($basePath, '/\\');
-        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->basePath = mb_rtrim($basePath, '/\\');
+        $this->baseUrl = mb_rtrim($baseUrl, '/');
     }
 
     public function exists(string $path): bool
@@ -55,12 +55,12 @@ final class FileSystemStorage implements StorageInterface
 
     public function url(string $path): string
     {
-        return $this->baseUrl.'/'.ltrim($path, '/');
+        return $this->baseUrl . '/' . mb_ltrim($path, '/');
     }
 
     public function path(string $relativePath): string
     {
-        return $this->basePath.'/'.ltrim($relativePath, '/');
+        return $this->basePath . '/' . mb_ltrim($relativePath, '/');
     }
 
     public function clearCache(): int
@@ -72,7 +72,7 @@ final class FileSystemStorage implements StorageInterface
         $count = 0;
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($this->basePath, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            \RecursiveIteratorIterator::CHILD_FIRST,
         );
 
         foreach ($iterator as $file) {

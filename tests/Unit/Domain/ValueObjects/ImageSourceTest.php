@@ -16,7 +16,7 @@ it('creates image source from attachment id', function () {
     $source = ImageSource::fromAttachmentId(
         123,
         'https://example.com/image.jpg',
-        '/var/www/uploads/image.jpg'
+        '/var/www/uploads/image.jpg',
     );
 
     expect($source->getUrl())->toBe('https://example.com/image.jpg')

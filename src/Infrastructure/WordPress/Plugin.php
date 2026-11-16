@@ -44,7 +44,7 @@ final class Plugin
             __('Thumbnails', 'thumbnail'),
             'manage_options',
             'kama-thumbnail-settings',
-            [$this, 'renderSettingsPage']
+            [$this, 'renderSettingsPage'],
         );
     }
 
@@ -60,7 +60,7 @@ final class Plugin
         $noPhotoPreview = Settings::resolveNoPhotoUrl((string) ($options['no_photo_url'] ?? ''));
         $settings_saved = isset($_GET['settings_saved']);
 
-        include __DIR__.'/../../../views/admin/settings.php';
+        include __DIR__ . '/../../../views/admin/settings.php';
     }
 
     public function enqueueAdminAssets(string $hook): void
@@ -74,8 +74,8 @@ final class Plugin
             'kama-thumb-settings',
             plugins_url('assets/js/admin-settings.js', KT_MAIN_FILE),
             ['jquery'],
-            filemtime(KT_PATH.'assets/js/admin-settings.js'),
-            true
+            filemtime(KT_PATH . 'assets/js/admin-settings.js'),
+            true,
         );
     }
 

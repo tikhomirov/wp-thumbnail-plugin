@@ -20,12 +20,12 @@
 defined('ABSPATH') || exit;
 
 define('KT_MAIN_FILE', __FILE__);
-define('KT_PATH', wp_normalize_path(dirname(__FILE__).'/'));
+define('KT_PATH', wp_normalize_path(dirname(__FILE__) . '/'));
 
 $is_plugin = false;
-if (defined('WP_PLUGIN_DIR') && strpos(KT_PATH, wp_normalize_path(WP_PLUGIN_DIR))) {
+if (defined('WP_PLUGIN_DIR') && mb_strpos(KT_PATH, wp_normalize_path(WP_PLUGIN_DIR))) {
     $is_plugin = true;
-} elseif (defined('WPMU_PLUGIN_DIR') && strpos(KT_PATH, wp_normalize_path(WPMU_PLUGIN_DIR))) {
+} elseif (defined('WPMU_PLUGIN_DIR') && mb_strpos(KT_PATH, wp_normalize_path(WPMU_PLUGIN_DIR))) {
     $is_plugin = true;
 }
 
@@ -35,17 +35,17 @@ if ($is_plugin) {
     define('KT_URL', strtr(KT_PATH, [wp_normalize_path(get_template_directory()) => get_template_directory_uri()]));
 }
 
-require_once __DIR__.'/autoload.php';
+require_once __DIR__ . '/autoload.php';
 
 add_action('init', function () {
     if (! defined('DOING_AJAX')) {
-        load_plugin_textdomain('thumbnail', false, basename(KT_PATH).'/languages');
+        load_plugin_textdomain('thumbnail', false, basename(KT_PATH) . '/languages');
     }
 
-    \KamaThumb\Infrastructure\WordPress\Plugin::getInstance();
+    KamaThumb\Infrastructure\WordPress\Plugin::getInstance();
 
     if (is_admin() && ! wp_doing_ajax()) {
-        require_once __DIR__.'/upgrade.php';
+        require_once __DIR__ . '/upgrade.php';
         kama_thumb_upgrade();
     }
 });

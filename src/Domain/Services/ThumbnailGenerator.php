@@ -11,7 +11,7 @@ final class ThumbnailGenerator
 {
     public function __construct(
         protected ImageProcessorInterface $processor,
-        protected StorageInterface $storage
+        protected StorageInterface $storage,
     ) {}
 
     public function generate(ImageSource $source, ThumbnailProfile $profile): ?string
@@ -62,6 +62,6 @@ final class ThumbnailGenerator
         $filename = implode('_', $parts);
         $extension = $profile->getFormat() ?? pathinfo($source->getUrl(), PATHINFO_EXTENSION);
 
-        return $filename.'.'.$extension;
+        return $filename . '.' . $extension;
     }
 }
