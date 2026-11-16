@@ -213,7 +213,7 @@ if (! function_exists('wp_parse_args')) {
 if (! function_exists('untrailingslashit')) {
     function untrailingslashit($string)
     {
-        return mb_rtrim($string, '/\\');
+        return rtrim($string, '/\\');
     }
 }
 

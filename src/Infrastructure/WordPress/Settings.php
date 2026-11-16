@@ -48,7 +48,7 @@ final class Settings
         if (is_numeric($noPhoto)) {
             $noPhoto = (string) (int) $noPhoto;
         } else {
-            $noPhoto = esc_url_raw(mb_trim((string) $noPhoto));
+            $noPhoto = esc_url_raw(trim((string) $noPhoto));
         }
 
         $options = [

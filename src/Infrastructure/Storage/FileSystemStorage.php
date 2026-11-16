@@ -10,8 +10,8 @@ final class FileSystemStorage implements StorageInterface
         protected string $basePath,
         protected string $baseUrl,
     ) {
-        $this->basePath = mb_rtrim($basePath, '/\\');
-        $this->baseUrl = mb_rtrim($baseUrl, '/');
+        $this->basePath = rtrim($basePath, '/\\');
+        $this->baseUrl = rtrim($baseUrl, '/');
     }
 
     public function exists(string $path): bool
@@ -55,12 +55,12 @@ final class FileSystemStorage implements StorageInterface
 
     public function url(string $path): string
     {
-        return $this->baseUrl . '/' . mb_ltrim($path, '/');
+        return $this->baseUrl . '/' . ltrim($path, '/');
     }
 
     public function path(string $relativePath): string
     {
-        return $this->basePath . '/' . mb_ltrim($relativePath, '/');
+        return $this->basePath . '/' . ltrim($relativePath, '/');
     }
 
     public function clearCache(): int
