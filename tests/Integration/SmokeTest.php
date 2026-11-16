@@ -15,7 +15,7 @@ it('functions file exists', function () {
 });
 
 it('readme file exists', function () {
-    expect(file_exists(__DIR__ . '/../../readme.md'))->toBeTrue();
+    expect(file_exists(__DIR__ . '/../../README.md'))->toBeTrue();
 });
 
 it('documentation exists', function () {
