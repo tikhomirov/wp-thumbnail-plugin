@@ -1,14 +1,32 @@
-![WP Thumbnails: одно исходное изображение, несколько размеров миниатюр](docs/cover.png)
+<p align="center">
+  <img src="docs/cover.png" alt="WP Thumbnails: одно исходное изображение, несколько размеров миниатюр">
+</p>
 
-# WP Thumbnails
+<h1 align="center">WP Thumbnails</h1>
 
-[![Последний релиз](https://img.shields.io/github/v/release/tikhomirov/wp-thumbnail-plugin?style=for-the-badge)](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest)
-![WordPress 5.6+](https://img.shields.io/badge/WordPress-5.6%2B-21759B?style=for-the-badge)
-![PHP 8.0+](https://img.shields.io/badge/PHP-8.0%2B-777BB4?style=for-the-badge)
+<p align="center">
+  <strong>Генерация и кэширование миниатюр WordPress по запросу</strong><br>
+  Плагин масштабирует или обрезает локальные вложения и сохраняет результаты в файловом кэше.
+</p>
 
-Создаёт миниатюры из вложений WordPress по запросу: масштабирует или обрезает изображения и сохраняет результаты в файловом кэше.
+<p align="center">
+  <a href="https://packagist.org/packages/rwsite/wp-thumbnail-plugin"><img src="https://img.shields.io/packagist/v/rwsite/wp-thumbnail-plugin.svg?style=flat-square" alt="Последняя версия"></a>
+  <a href="https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest"><img src="https://img.shields.io/github/v/release/tikhomirov/wp-thumbnail-plugin?style=flat-square" alt="Последний релиз"></a>
+  <img src="https://img.shields.io/badge/WordPress-5.6%2B-21759B?style=flat-square" alt="WordPress 5.6+">
+  <img src="https://img.shields.io/badge/PHP-8.0%2B-777BB4?style=flat-square" alt="PHP 8.0+">
+  <img src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg?style=flat-square" alt="Лицензия GPL-2.0-or-later">
+</p>
 
-[English version](README.md)
+<p align="center">
+  <a href="#требования">Требования</a> •
+  <a href="#установка">Установка</a> •
+  <a href="#настройки-и-форматы">Настройки</a> •
+  <a href="#php-в-шаблонах">PHP в шаблонах</a> •
+  <a href="#связанный-плагин">Связанный плагин</a> •
+  <a href="README.md">EN version</a>
+</p>
+
+---
 
 ## Требования
 
@@ -17,6 +35,14 @@
 - Imagick или GD (при наличии выбирается Imagick) и доступный для записи каталог `wp-content/cache/thumb/`.
 
 ## Установка
+
+### Через Composer
+
+```bash
+composer require rwsite/wp-thumbnail-plugin
+```
+
+### Ручная установка
 
 1. Скачайте ZIP с исходным кодом [последнего релиза](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest) и распакуйте так, чтобы появился файл `wp-content/plugins/wp-thumbnail-plugin/wp-thumbnail-plugin.php`. Если сайт хранится в Git, можно подключить репозиторий как подмодуль по тому же пути.
 2. Активируйте **Thumbnails** в разделе **Плагины**. Для работы Composer не нужен: в плагине есть собственный автозагрузчик.
@@ -51,4 +77,14 @@ if ($attachment_id) {
 
 [Taxonomy Thumbnail](https://github.com/tikhomirov/wp-term-thumbnail-plugin) добавляет изображения терминам таксономий и позволяет записям наследовать резервную обложку от термина. WP Thumbnails создаёт файлы изображений нужного размера, но не управляет назначением обложек. Плагины можно использовать вместе.
 
-[История изменений](CHANGELOG.md) · GPL-2.0-or-later
+## История изменений
+
+См. [CHANGELOG.md](CHANGELOG.md).
+
+## Лицензия
+
+GPL-2.0-or-later
+
+## Автор
+
+Aleksei Tikhomirov (https://rwsite.ru)

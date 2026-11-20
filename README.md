@@ -1,14 +1,32 @@
-![WP Thumbnails: one source image, multiple thumbnail sizes](docs/cover.png)
+<p align="center">
+  <img src="docs/cover.png" alt="WP Thumbnails: one source image, multiple thumbnail sizes">
+</p>
 
-# WP Thumbnails
+<h1 align="center">WP Thumbnails</h1>
 
-[![Latest release](https://img.shields.io/github/v/release/tikhomirov/wp-thumbnail-plugin?style=for-the-badge)](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest)
-![WordPress 5.6+](https://img.shields.io/badge/WordPress-5.6%2B-21759B?style=for-the-badge)
-![PHP 8.0+](https://img.shields.io/badge/PHP-8.0%2B-777BB4?style=for-the-badge)
+<p align="center">
+  <strong>On-demand thumbnail generation and caching for WordPress</strong><br>
+  Crop or resize local attachments and reuse the results from the filesystem cache.
+</p>
 
-Generate cropped or resized thumbnails on demand from WordPress attachments, then reuse them from the filesystem cache.
+<p align="center">
+  <a href="https://packagist.org/packages/rwsite/wp-thumbnail-plugin"><img src="https://img.shields.io/packagist/v/rwsite/wp-thumbnail-plugin.svg?style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest"><img src="https://img.shields.io/github/v/release/tikhomirov/wp-thumbnail-plugin?style=flat-square" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/WordPress-5.6%2B-21759B?style=flat-square" alt="WordPress 5.6+">
+  <img src="https://img.shields.io/badge/PHP-8.0%2B-777BB4?style=flat-square" alt="PHP 8.0+">
+  <img src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg?style=flat-square" alt="License GPL-2.0-or-later">
+</p>
 
-[Русская версия](README.ru.md)
+<p align="center">
+  <a href="#requirements">Requirements</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#settings-and-formats">Settings</a> •
+  <a href="#php-templates">PHP templates</a> •
+  <a href="#companion-plugin">Companion plugin</a> •
+  <a href="README.ru.md">RU version</a>
+</p>
+
+---
 
 ## Requirements
 
@@ -17,6 +35,14 @@ Generate cropped or resized thumbnails on demand from WordPress attachments, the
 - Imagick or GD (Imagick is preferred when installed), and a writable cache directory under `wp-content/cache/thumb/`.
 
 ## Installation
+
+### Via Composer
+
+```bash
+composer require rwsite/wp-thumbnail-plugin
+```
+
+### Manual installation
 
 1. Download the source ZIP from the [latest release](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest) and extract it so that `wp-content/plugins/wp-thumbnail-plugin/wp-thumbnail-plugin.php` exists. For a Git-managed site, you can add the repository as a submodule at `wp-content/plugins/wp-thumbnail-plugin` instead.
 2. Activate **Thumbnails** under **Plugins**. Composer is not required at runtime; the plugin ships its own autoloader.
@@ -51,4 +77,14 @@ Choose one helper for the output you need. Use `esc_url()` if you insert the URL
 
 [Taxonomy Thumbnail](https://github.com/tikhomirov/wp-term-thumbnail-plugin) assigns images to taxonomy terms and lets posts inherit a fallback cover from a term. WP Thumbnails generates image files at the requested dimensions; it does not manage those assignments. Use both if you need term-based covers and generated thumbnails.
 
-[Changelog](CHANGELOG.md) · GPL-2.0-or-later
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+GPL-2.0-or-later
+
+## Author
+
+Aleksei Tikhomirov (https://rwsite.ru)
