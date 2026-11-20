@@ -1,190 +1,54 @@
+![WP Thumbnails: one source image, multiple thumbnail sizes](docs/cover.png)
+
 # WP Thumbnails
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/tikhomirov/wp-thumbnail-plugin/releases)
-[![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-blue.svg)](https://wordpress.org/)
-[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
+[![Latest release](https://img.shields.io/github/v/release/tikhomirov/wp-thumbnail-plugin?style=for-the-badge)](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest)
+![WordPress 5.6+](https://img.shields.io/badge/WordPress-5.6%2B-21759B?style=for-the-badge)
+![PHP 8.0+](https://img.shields.io/badge/PHP-8.0%2B-777BB4?style=for-the-badge)
 
-On-the-fly thumbnail generation and caching for WordPress. A modern fork of Kama Thumbnail with WebP support, PSR-4 architecture, and both legacy (`kama_thumb_*`) and modern (`thumb_*`) APIs.
+Generate cropped or resized thumbnails on demand from WordPress attachments, then reuse them from the filesystem cache.
+
+[Русская версия](README.ru.md)
 
 ## Requirements
 
-| Component | Minimum | Tested |
-|-----------|---------|--------|
-| **WordPress** | 5.6 | 6.6 – 6.9 |
-| **PHP** | 7.4 | 7.4, 8.0 – 8.4 |
-| **Image library** | GD or Imagick | GD, Imagick |
-
-## Features
-
-- **On-the-fly thumbnails** — resize and crop images with filesystem caching
-- **WebP output** — optional WebP generation when supported by the server
-- **Smart source resolution** — featured image, first content image, attachments, or custom source
-- **Admin settings** — quality, format, cache directory, placeholder image
-- **Dual API** — modern `thumb_*` functions and legacy `kama_thumb_*` aliases
-- **Filters** — `get_post_thumbnail` and other hooks for integration with term covers and themes
-- **PSR-4 architecture** — domain/application/infrastructure layers with Pest tests
+- WordPress 5.6+ (the plugin header lists compatibility through 6.9).
+- PHP 8.0+ and `mbstring`. The header and Composer metadata still list PHP 7.4, but the runtime uses PHP 8 syntax, including union types.
+- Imagick or GD (Imagick is preferred when installed), and a writable cache directory under `wp-content/cache/thumb/`.
 
 ## Installation
 
-### From Git (submodule)
+1. Download the source ZIP from the [latest release](https://github.com/tikhomirov/wp-thumbnail-plugin/releases/latest) and extract it so that `wp-content/plugins/wp-thumbnail-plugin/wp-thumbnail-plugin.php` exists. For a Git-managed site, you can add the repository as a submodule at `wp-content/plugins/wp-thumbnail-plugin` instead.
+2. Activate **Thumbnails** under **Plugins**. Composer is not required at runtime; the plugin ships its own autoloader.
+3. Open **Settings → Thumbnails** to configure defaults and check the image processor and cache directory.
 
-```bash
-git submodule add git@github.com:tikhomirov/wp-thumbnail-plugin.git wp-content/plugins/wp-thumbnail-plugin
-```
+## Settings and formats
 
-### Manual
+- **JPEG quality** sets the default quality (0–100; initially 90). Pass `quality` to override it per call.
+- **WebP output** is off by default. Enable it for all generated thumbnails, or pass `'format' => 'webp'` for a single call. WebP requires support in the active image library. With neither a format override nor WebP enabled, output uses the source URL's extension. The processors list JPEG (`jpg`/`jpeg`), PNG, GIF and WebP (GD lists WebP only if its encoder is available).
+- **No image placeholder** accepts a media attachment ID or a URL. The placeholder and **Do not show placeholder image** checkbox apply to the `get_post_thumbnail()` fallback, not to direct `thumb_*` calls. The external-host, upscaling and automatic cleanup fields do not enable remote fetching, control upscaling or schedule cache cleanup in the current generator.
+- **Clear Cache** deletes generated thumbnails. The next request for a size regenerates it from the original.
 
-1. Download the [latest release](https://github.com/tikhomirov/wp-thumbnail-plugin/releases).
-2. Upload to `wp-content/plugins/wp-thumbnail-plugin/`.
-3. Activate **Thumbnails** in WordPress admin.
-4. Configure options under **Settings → Thumbnails**.
+## PHP templates
 
-### Composer (inside the plugin)
-
-```bash
-cd wp-content/plugins/wp-thumbnail-plugin
-composer install
-```
-
-## Usage
-
-### Get thumbnail URL
+Call these helpers after WordPress `init`, for example in a theme template. Pass a local media attachment ID as the second argument (or use `attach_id` in the options). Use `post_id` to select a post's featured image. Although the signature accepts URLs, a bare URL does not provide the local file path required for generation; this API does not download remote images or search post content for a source.
 
 ```php
-$url = thumb_src([
-    'width'  => 480,
-    'height' => 340,
-    'crop'   => true,
-]);
+$attachment_id = get_post_thumbnail_id();
 
-// With explicit source (attachment ID or URL)
-$url = thumb_src([
-    'width'  => 300,
-    'height' => 200,
-], get_post_thumbnail_id());
+if ($attachment_id) {
+    $size = ['width' => 480, 'height' => 320, 'crop' => true];
+
+    $url = thumb_src($size, $attachment_id); // URL, or '' if unavailable.
+    echo thumb_img($size + ['class' => 'post-cover', 'alt' => get_the_title()], $attachment_id);
+    echo thumb_a_img($size, $attachment_id); // Image linked to the original.
+}
 ```
 
-### Output `<img>` tag
+Choose one helper for the output you need. Use `esc_url()` if you insert the URL returned by `thumb_src()` into HTML. `crop => false` resizes without cropping. `thumb_img()` and `thumb_a_img()` return an empty string when generation fails; the linked variant can return just the image when no original URL is resolved. The `kama_thumb_*` names remain as compatibility wrappers. See the [API reference](docs/CURRENT_API.md) for signatures.
 
-```php
-echo thumb_img([
-    'width'  => 480,
-    'height' => 340,
-    'crop'   => true,
-    'class'  => 'img-fluid rounded',
-    'alt'    => 'Image description',
-]);
-```
+## Companion plugin
 
-### Output linked image
+[Taxonomy Thumbnail](https://github.com/tikhomirov/wp-term-thumbnail-plugin) assigns images to taxonomy terms and lets posts inherit a fallback cover from a term. WP Thumbnails generates image files at the requested dimensions; it does not manage those assignments. Use both if you need term-based covers and generated thumbnails.
 
-```php
-echo thumb_a_img([
-    'width'  => 480,
-    'height' => 340,
-    'crop'   => true,
-]);
-```
-
-## Arguments
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `width` | int | 0 | Target width in pixels |
-| `height` | int | 0 | Target height in pixels |
-| `crop` | bool | true | Crop to exact dimensions |
-| `class` | string | '' | CSS class for `<img>` |
-| `alt` | string | '' | Alt text for `<img>` |
-| `attr` | string | '' | Extra HTML attributes |
-| `src` | string\|int | '' | Attachment ID or image URL |
-
-## Legacy API
-
-For backward compatibility with Kama Thumbnail themes and snippets:
-
-- `kama_thumb_src()`
-- `kama_thumb_img()`
-- `kama_thumb_a_img()`
-
-## Development
-
-```bash
-composer install
-composer test          # Pest unit + integration tests
-composer test:coverage
-composer phpstan
-composer lint
-composer quality       # phpstan + lint
-```
-
-## Architecture
-
-```
-wp-thumbnail-plugin/
-├── wp-thumbnail-plugin.php       # Bootstrap, constants
-├── autoload.php
-├── src/
-│   ├── Application/
-│   │   └── ThumbnailService.php  # Orchestration
-│   ├── Domain/
-│   │   ├── Contracts/            # Storage, ImageProcessor interfaces
-│   │   ├── Services/             # ThumbnailGenerator
-│   │   └── ValueObjects/         # ThumbnailProfile, ImageSource
-│   └── Infrastructure/
-│       ├── ImageProcessors/      # GD, Imagick
-│       ├── Storage/              # FileSystemStorage
-│       └── WordPress/            # Plugin, Settings, TemplateFunctions
-├── views/admin/                  # Settings page
-├── assets/js/                    # Admin scripts
-└── tests/                        # Pest tests
-```
-
-Template functions (`thumb_src`, `thumb_img`, `thumb_a_img`) are registered by `TemplateFunctions` and delegate to `ThumbnailService`.
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md).
-
-## License
-
-GPL-2.0-or-later
-
-## Author
-
-Aleksey Tikhomirov — [rwsite.ru](https://rwsite.ru)
-
----
-
-## Русский
-
-**WP Thumbnails** — плагин для генерации и кэширования миниатюр «на лету» в WordPress. Современный форк Kama Thumbnail с WebP, PSR-4 и двумя API.
-
-### Совместимость
-
-- **WordPress:** от 5.6, протестировано на 6.6 – 6.9
-- **PHP:** от 7.4, протестировано на 7.4, 8.0 – 8.4
-- **Библиотека изображений:** GD или Imagick
-
-### Что умеет
-
-- Генерация и кэширование миниатюр с обрезкой и изменением размера
-- WebP при поддержке сервером
-- Поиск исходника: featured image, первое изображение в контенте, вложения
-- Настройки в **Настройки → Thumbnails**
-- Современный API (`thumb_*`) и legacy (`kama_thumb_*`)
-- Фильтр `get_post_thumbnail` для интеграции с обложками терминов
-
-### Установка
-
-Скачайте [релиз](https://github.com/tikhomirov/wp-thumbnail-plugin/releases) или подключите как git submodule. После активации настройте параметры в админке.
-
-### Пример в шаблоне темы
-
-```php
-<?php echo thumb_img([
-    'width'  => 480,
-    'height' => 340,
-    'crop'   => true,
-    'class'  => 'img-fluid',
-]); ?>
-```
+[Changelog](CHANGELOG.md) · GPL-2.0-or-later
