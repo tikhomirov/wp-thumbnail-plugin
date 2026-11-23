@@ -16,6 +16,8 @@ final class ThumbnailGenerator
 
     public function generate(ImageSource $source, ThumbnailProfile $profile): ?string
     {
+        $profile = $this->withSupportedFormat($source, $profile);
+
         $cacheKey = $this->generateCacheKey($source, $profile);
         $cachePath = $this->storage->path($cacheKey);
 
@@ -47,6 +49,66 @@ final class ThumbnailGenerator
         }
 
         return $this->storage->url($cacheKey);
+    }
+
+    /**
+     * Falls back to a format the processor can actually write.
+     *
+     * A requested webp on a GD build without libwebp would otherwise make every
+     * cache miss fail and return null, which callers render as an empty thumbnail.
+     */
+    protected function withSupportedFormat(ImageSource $source, ThumbnailProfile $profile): ThumbnailProfile
+    {
+        $format = $profile->getFormat();
+        if ($format === null) {
+            return $profile;
+        }
+
+        $supported = array_map('strtolower', $this->processor->getSupportedFormats());
+        if (in_array(strtolower($format), $supported, true)) {
+            return $profile;
+        }
+
+        $fallback = $this->resolveFallbackFormat($source, $supported);
+        if ($fallback === null) {
+            return $profile;
+        }
+
+        return new ThumbnailProfile(
+            $profile->getWidth(),
+            $profile->getHeight(),
+            $profile->getCrop(),
+            $profile->getQuality(),
+            $fallback,
+        );
+    }
+
+    /**
+     * @param string[] $supported
+     */
+    protected function resolveFallbackFormat(ImageSource $source, array $supported): ?string
+    {
+        $imageType = null;
+        $sourcePath = $source->getPath();
+        if ($sourcePath && file_exists($sourcePath) && function_exists('getimagesize')) {
+            $info = getimagesize($sourcePath);
+            $imageType = $info[2] ?? null;
+        }
+
+        $preferred = ['png', 'jpg', 'jpeg', 'gif'];
+        if ($imageType === IMAGETYPE_JPEG) {
+            $preferred = ['jpg', 'jpeg', 'png', 'gif'];
+        } elseif ($imageType === IMAGETYPE_GIF) {
+            $preferred = ['gif', 'png', 'jpg', 'jpeg'];
+        }
+
+        foreach ($preferred as $candidate) {
+            if (in_array($candidate, $supported, true)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 
     protected function generateCacheKey(ImageSource $source, ThumbnailProfile $profile): string
